@@ -22,8 +22,6 @@ jobs:
         id: test-run
         uses: ./
         with:
-          owner: ovsds
-          repo: push-version-tags-action
           tag_name: v1.0.0
 
       - name: Assert exists
@@ -42,7 +40,7 @@ jobs:
         uses: ./.github/actions/assert_equals
         with:
           actual: ${{ steps.test-run.outputs.tag_sha }}
-          expected: "29ae696c9f5bdb8d25dc5dbfd3a88acb2af001f3"
+          expected: "c039c53e2ffb5bb54ebdb13189b4c23e7cba15e2"
 
       - name: Assert tag type
         uses: ./.github/actions/assert_equals
@@ -54,13 +52,13 @@ jobs:
         uses: ./.github/actions/assert_equals
         with:
           actual: ${{ steps.test-run.outputs.commit_sha }}
-          expected: "29ae696c9f5bdb8d25dc5dbfd3a88acb2af001f3"
+          expected: "c039c53e2ffb5bb54ebdb13189b4c23e7cba15e2"
 
       - name: Assert tag message
         uses: ./.github/actions/assert_equals
         with:
           actual: ${{ steps.test-run.outputs.tag_message }}
-          expected: "feat: init (#1)"
+          expected: "feat: initial commit (#1)\n\n* feat: init from template\r\n\r\n* feat: initial"
 
       - name: Assert verified
         uses: ./.github/actions/assert_equals

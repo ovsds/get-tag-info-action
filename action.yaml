@@ -146,7 +146,7 @@ runs:
         verified=$(echo $response | jq -r '.verification.verified')
 
         echo "commit_sha=${commit_sha}" >> $GITHUB_OUTPUT
-        echo "tag_message=${tag_message}" >> $GITHUB_OUTPUT
+        { echo "tag_message<<EOF"; echo "$tag_message"; echo "EOF"; } >> $GITHUB_OUTPUT # Multiline string
         echo "verified=${verified}" >> $GITHUB_OUTPUT
       env:
         GH_TOKEN: ${{ steps.ensure-token.outputs.github_token }}
