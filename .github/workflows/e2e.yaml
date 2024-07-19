@@ -1,0 +1,185 @@
+name: E2E
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  e2e-default:
+    runs-on: ubuntu-20.04
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test Run
+        id: test-run
+        uses: ./
+        with:
+          owner: ovsds
+          repo: push-version-tags-action
+          tag_name: v1.0.0
+
+      - name: Assert exists
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.exists }}
+          expected: "true"
+
+      - name: Assert tag name
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.tag_name }}
+          expected: "v1.0.0"
+
+      - name: Assert tag sha
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.tag_sha }}
+          expected: "29ae696c9f5bdb8d25dc5dbfd3a88acb2af001f3"
+
+      - name: Assert tag type
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.tag_type }}
+          expected: "commit"
+
+      - name: Assert commit sha
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.commit_sha }}
+          expected: "29ae696c9f5bdb8d25dc5dbfd3a88acb2af001f3"
+
+      - name: Assert tag message
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.tag_message }}
+          expected: "feat: init (#1)"
+
+      - name: Assert verified
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.verified }}
+          expected: "true"
+
+  e2e-unverified-commit-type:
+    runs-on: ubuntu-20.04
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test Run
+        id: test-run
+        uses: ./
+        with:
+          tag_name: unverified_tag
+
+      - name: Assert exists
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.exists }}
+          expected: "true"
+
+      - name: Assert tag name
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.tag_name }}
+          expected: "unverified_tag"
+
+      - name: Assert tag sha
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.tag_sha }}
+          expected: "518c2e81cd748430d589f760efa3b0847d1e1c3d"
+
+      - name: Assert tag type
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.tag_type }}
+          expected: "commit"
+
+      - name: Assert commit sha
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.commit_sha }}
+          expected: "518c2e81cd748430d589f760efa3b0847d1e1c3d"
+
+      - name: Assert tag message
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.tag_message }}
+          expected: "unverified_commit"
+
+      - name: Assert verified
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.verified }}
+          expected: "false"
+
+  e2e-not-exists:
+    runs-on: ubuntu-20.04
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test Run
+        id: test-run
+        uses: ./
+        with:
+          tag_name: definitely-not-a-tag
+
+      - name: Assert exists
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.exists }}
+          expected: "false"
+
+      - name: Assert tag name
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.tag_name }}
+          expected: ""
+
+      - name: Assert tag sha
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.tag_sha }}
+          expected: ""
+
+      - name: Assert tag type
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.tag_type }}
+          expected: ""
+
+      - name: Assert commit sha
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.commit_sha }}
+          expected: ""
+
+      - name: Assert tag message
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.tag_message }}
+          expected: ""
+
+      - name: Assert verified
+        uses: ./.github/actions/assert_equals
+        with:
+          actual: ${{ steps.test-run.outputs.verified }}
+          expected: ""

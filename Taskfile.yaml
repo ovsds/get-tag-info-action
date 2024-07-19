@@ -25,11 +25,11 @@ tasks:
 
       - echo 'Installing node dependencies...'
       - task: _with_nvm
-        vars: { COMMAND: "npm clean-install" }
+        vars: { COMMAND: "npm install" }
 
       - echo 'Installing husky pre-commit...'
       - task: _with_nvm
-        vars: { COMMAND: "npm run prepare-husky" }
+        vars: { COMMAND: "npm run prepare" }
 
   lint:
     desc: Lint project

@@ -1,0 +1,35 @@
+name: AssertEquals
+description: Asserts that actual value equals expected value
+
+inputs:
+  actual:
+    description: "Value to assert"
+    required: true
+
+  expected:
+    description: "Expected value"
+    required: true
+
+  message:
+    description: "Message to display if assertion fails"
+    required: false
+    default: "Assertion failed"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Assert
+      id: assert
+      shell: bash
+      run: |
+        actual="${{ inputs.actual }}"
+        expected="${{ inputs.expected }}"
+        message="${{ inputs.message }}"
+        if [[ "$actual" != "$expected" ]]; then
+          echo "$message. Expected: $expected, Actual: $actual"
+          exit 1
+        fi
+
+branding:
+  icon: "check-circle"
+  color: "green"
