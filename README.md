@@ -10,7 +10,11 @@ Gets information for a tag.
 ### Example
 
 ```yaml
-
+- name: Get tag info
+  id: get-tag-info
+  uses: ovsds/get-tag-info-action@v1
+  with:
+    tag_name: v1.0.0
 ```
 
 ### Action Inputs
