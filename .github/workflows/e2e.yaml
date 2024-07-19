@@ -181,3 +181,25 @@ jobs:
         with:
           actual: ${{ steps.test-run.outputs.verified }}
           expected: ""
+
+  e2e-no-partial-match:
+    runs-on: ubuntu-20.04
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test Run
+        id: test-run
+        uses: ./
+        with:
+          tag_name: v
+
+      - name: Assert exists
+        uses: nick-fields/assert-action@v2
+        with:
+          actual: ${{ steps.test-run.outputs.exists }}
+          expected: "false"
