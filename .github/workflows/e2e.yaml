@@ -25,43 +25,43 @@ jobs:
           tag_name: v1.0.0
 
       - name: Assert exists
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.exists }}
           expected: "true"
 
       - name: Assert tag name
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.tag_name }}
           expected: "v1.0.0"
 
       - name: Assert tag sha
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.tag_sha }}
           expected: "c039c53e2ffb5bb54ebdb13189b4c23e7cba15e2"
 
       - name: Assert tag type
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.tag_type }}
           expected: "commit"
 
       - name: Assert commit sha
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.commit_sha }}
           expected: "c039c53e2ffb5bb54ebdb13189b4c23e7cba15e2"
 
       - name: Assert tag message
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.tag_message }}
           expected: "feat: initial commit (#1)\n\n* feat: init from template\r\n\r\n* feat: initial"
 
       - name: Assert verified
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.verified }}
           expected: "true"
@@ -83,43 +83,43 @@ jobs:
           tag_name: unverified_tag
 
       - name: Assert exists
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.exists }}
           expected: "true"
 
       - name: Assert tag name
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.tag_name }}
           expected: "unverified_tag"
 
       - name: Assert tag sha
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.tag_sha }}
           expected: "518c2e81cd748430d589f760efa3b0847d1e1c3d"
 
       - name: Assert tag type
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.tag_type }}
           expected: "commit"
 
       - name: Assert commit sha
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.commit_sha }}
           expected: "518c2e81cd748430d589f760efa3b0847d1e1c3d"
 
       - name: Assert tag message
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.tag_message }}
           expected: "unverified_commit"
 
       - name: Assert verified
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.verified }}
           expected: "false"
@@ -141,43 +141,43 @@ jobs:
           tag_name: definitely-not-a-tag
 
       - name: Assert exists
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.exists }}
           expected: "false"
 
       - name: Assert tag name
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.tag_name }}
           expected: ""
 
       - name: Assert tag sha
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.tag_sha }}
           expected: ""
 
       - name: Assert tag type
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.tag_type }}
           expected: ""
 
       - name: Assert commit sha
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.commit_sha }}
           expected: ""
 
       - name: Assert tag message
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.tag_message }}
           expected: ""
 
       - name: Assert verified
-        uses: ./.github/actions/assert_equals
+        uses: nick-fields/assert-action@v2
         with:
           actual: ${{ steps.test-run.outputs.verified }}
           expected: ""
