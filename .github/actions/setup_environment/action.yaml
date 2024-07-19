@@ -1,0 +1,16 @@
+name: "Setup Environment"
+description: "Setting environment for the project"
+
+inputs:
+  task-version:
+    description: "Task version"
+    required: true
+    default: "3.33.1"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Task
+      uses: arduino/setup-task@v1
+      with:
+        version: ${{ inputs.task-version }}

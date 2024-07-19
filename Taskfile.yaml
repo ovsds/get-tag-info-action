@@ -1,0 +1,85 @@
+version: 3
+
+silent: true
+
+vars:
+  NENV: "node_modules"
+
+tasks:
+  _prettier:
+    internal: true
+    cmds:
+      - "{{.NENV}}/.bin/prettier {{.COMMAND}}"
+
+  _with_nvm:
+    internal: true
+    cmds:
+      - "source ${HOME}/.nvm/nvm.sh && nvm use && {{.COMMAND}}"
+
+  init:
+    desc: Initialize project environment
+    cmds:
+      - echo 'Installing node version...'
+      - task: _with_nvm
+        vars: { COMMAND: "nvm install" }
+
+      - echo 'Installing node dependencies...'
+      - task: _with_nvm
+        vars: { COMMAND: "npm install" }
+
+      - echo 'Installing husky pre-commit...'
+      - task: _with_nvm
+        vars: { COMMAND: "npm run prepare" }
+
+  lint:
+    desc: Lint project
+    cmds:
+      - echo 'Running prettier checks...'
+      - task: _prettier
+        vars: { COMMAND: "--check ." }
+
+  lint-fix:
+    desc: Lint fix project
+    cmds:
+      - echo 'Running prettier fixes...'
+      - task: _prettier
+        vars: { COMMAND: "--write ." }
+
+  clean:
+    desc: Clean project environment
+    cmds:
+      - echo 'Cleaning node dependencies...'
+      - rm -rf {{.NENV}}
+
+  dependencies-update:
+    desc: Update dependencies
+    cmds:
+      - echo 'Updating node dependencies...'
+      - task: _with_nvm
+        vars: { COMMAND: "npm update" }
+      - task: _with_nvm
+        vars: { COMMAND: "npm outdated" }
+      - task: _with_nvm
+        vars: { COMMAND: "npm audit" }
+
+  update-from-template:
+    desc: Update project from template
+    cmds:
+      - echo 'Updating project from template...'
+      - cookiecutter
+        --no-input
+        --overwrite-if-exists
+        --output-dir ../
+        {{.TEMPLATE_PATH}}
+        project_name="Get Tag Info Action"
+        marketplace_name="Get Tag Info"
+    vars:
+      TEMPLATE_PATH: '{{.TEMPLATE_PATH | default "https://github.com/ovsds/template-repository-github-action"}}'
+
+  # CI-specific
+
+  ci-init:
+    desc: Initialize project environment in CI
+    cmds:
+      - echo 'Installing node dependencies...'
+      - npm clean-install

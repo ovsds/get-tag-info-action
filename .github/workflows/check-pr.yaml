@@ -1,0 +1,30 @@
+name: Check PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  check-pr:
+    runs-on: ubuntu-20.04
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup_environment
+
+      - name: Install Dependencies
+        run: |
+          task ci-init
+
+      - name: Lint PR
+        run: |
+          task lint

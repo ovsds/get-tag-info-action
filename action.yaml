@@ -1,0 +1,156 @@
+name: "Get Tag Info"
+description: "Returns tag information for the given tag name"
+
+inputs:
+  github_token:
+    description: "Github token used for API calls. Required scope - 'contents: read'"
+
+  owner:
+    description: "Owner of the repository"
+
+  repo:
+    description: "Repository name"
+
+  tag_name:
+    description: "Target tag name"
+    required: true
+
+outputs:
+  exists:
+    description: "Tag exists"
+    value: ${{ steps.get-ref.outputs.exists }}
+
+  tag_name:
+    description: "Tag name"
+    value: ${{ steps.get-ref.outputs.tag_name }}
+
+  tag_sha:
+    description: "Tag SHA"
+    value: ${{ steps.get-ref.outputs.tag_sha }}
+
+  tag_type:
+    description: "Tag type"
+    value: ${{ steps.get-ref.outputs.tag_type }}
+
+  commit_sha:
+    description: "Commit SHA"
+    value: ${{ steps.get-commit.outputs.commit_sha }}
+
+  tag_message:
+    description: "Tag message"
+    value: ${{ steps.get-commit.outputs.tag_message }}
+
+  verified:
+    description: "Tag verification status"
+    value: ${{ steps.get-commit.outputs.verified }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Ensure owner
+      id: ensure-owner
+      shell: bash
+      run: |
+        # Ensuring `owner` input, using repository owner if not provided
+        owner=${{ inputs.owner }}
+        if [[ -z "$owner" ]]; then
+          owner=${{ github.repository_owner }}
+        fi
+        echo "owner=${owner}" >> $GITHUB_OUTPUT
+
+    - name: Ensure repo
+      id: ensure-repo
+      shell: bash
+      run: |
+        # Ensuring `repo` input, using repository if not provided
+        repo=${{ inputs.repo }}
+        if [[ -z "$repo" ]]; then
+        repo=${{ github.event.repository.name }}
+        fi
+        echo "repo=${repo}" >> $GITHUB_OUTPUT
+
+    - name: Ensure token
+      id: ensure-token
+      shell: bash
+      run: |
+        # Ensuring `github_token` input, using `github.token` variable if not provided
+        github_token=${{ inputs.github_token }}
+        if [[ -z "$github_token" ]]; then
+          github_token=${{ github.token }}
+        fi
+        echo "github_token=${github_token}" >> $GITHUB_OUTPUT
+
+    - name: Get ref
+      id: get-ref
+      shell: bash
+      run: |
+        # Getting tag ref information
+        owner=${{ steps.ensure-owner.outputs.owner }}
+        repo=${{ steps.ensure-repo.outputs.repo }}
+        tag_name=${{ inputs.tag_name }}
+
+        set +e
+        response=$( \
+          gh api \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          /repos/$owner/$repo/git/refs/tags/$tag_name \
+        )
+        set -e
+
+        exit_code=$?
+        response_code=$(echo $response | jq -r '.status')
+        if [[ "$response_code" == "404" ]]; then
+          echo "exists=false" >> $GITHUB_OUTPUT
+          exit 0
+        elif [[ $exit_code -ne 0 ]]; then
+            echo "$response"
+            exit 1
+        fi
+
+        tag_name=${{ inputs.tag_name }}
+        tag_sha=$(echo $response | jq -r '.object.sha')
+        tag_type=$(echo $response | jq -r '.object.type')
+
+        echo "exists=true" >> $GITHUB_OUTPUT
+        echo "tag_name=${tag_name}" >> $GITHUB_OUTPUT
+        echo "tag_sha=${tag_sha}" >> $GITHUB_OUTPUT
+        echo "tag_type=${tag_type}" >> $GITHUB_OUTPUT
+      env:
+        GH_TOKEN: ${{ steps.ensure-token.outputs.github_token }}
+
+    - name: Get commit
+      if: steps.get-ref.outputs.exists == 'true'
+      id: get-commit
+      shell: bash
+      run: |
+        # Getting commit information
+        owner=${{ steps.ensure-owner.outputs.owner }}
+        repo=${{ steps.ensure-repo.outputs.repo }}
+        type=${{ steps.get-ref.outputs.tag_type }}
+        sha=${{ steps.get-ref.outputs.tag_sha }}
+
+        response=$( \
+          gh api \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          /repos/${owner}/${repo}/git/${type}s/${sha} \
+        )
+
+        if [[ "$type" == "tag" ]]; then
+          commit_sha=$(echo $response | jq -r '.object.sha')
+        elif [[ "$type" == "commit" ]]; then
+          commit_sha=${{ steps.get-ref.outputs.tag_sha }}
+        fi
+        tag_message=$(echo $response | jq -r '.message')
+        verified=$(echo $response | jq -r '.verification.verified')
+
+        echo "commit_sha=${commit_sha}" >> $GITHUB_OUTPUT
+        echo "tag_message=${tag_message}" >> $GITHUB_OUTPUT
+        echo "verified=${verified}" >> $GITHUB_OUTPUT
+      env:
+        GH_TOKEN: ${{ steps.ensure-token.outputs.github_token }}
+
+branding:
+  icon: "tag"
+  color: "gray-dark"
