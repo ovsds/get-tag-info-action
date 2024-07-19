@@ -1,0 +1,27 @@
+name: "Get Tag Info Action"
+description: "Get Tag Info Action"
+
+inputs:
+  placeholder:
+    description: "Placeholder input to be replaced by real inputs"
+    required: true
+    default: "placeholder"
+
+outputs:
+  placeholder:
+    description: "Placeholder output to be replaced by real outputs"
+    value: ${{steps.placeholder.outputs.placeholder }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Placeholder
+      id: placeholder
+      shell: bash
+      run: |
+        echo "::set-output name=placeholder::${{ inputs.placeholder }}"
+
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#branding
+branding:
+  icon: "message-square"
+  color: "gray-dark"
