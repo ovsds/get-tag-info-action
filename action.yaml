@@ -94,7 +94,7 @@ runs:
           gh api \
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
-          /repos/$owner/$repo/git/refs/tags/$tag_name \
+          /repos/$owner/$repo/git/ref/tags/$tag_name \
         )
         set -e
 
