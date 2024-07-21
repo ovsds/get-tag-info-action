@@ -4,12 +4,15 @@ description: "Returns tag information for the given tag name"
 inputs:
   github_token:
     description: "Github token used for API calls. Required scope - 'contents: read'"
+    default: ${{ github.token }}
 
   owner:
     description: "Owner of the repository"
+    default: ${{ github.repository_owner }}
 
   repo:
     description: "Repository name"
+    default: ${{ github.event.repository.name }}
 
   tag_name:
     description: "Target tag name"
@@ -47,46 +50,13 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Ensure owner
-      id: ensure-owner
-      shell: bash
-      run: |
-        # Ensuring `owner` input, using repository owner if not provided
-        owner=${{ inputs.owner }}
-        if [[ -z "$owner" ]]; then
-          owner=${{ github.repository_owner }}
-        fi
-        echo "owner=${owner}" >> $GITHUB_OUTPUT
-
-    - name: Ensure repo
-      id: ensure-repo
-      shell: bash
-      run: |
-        # Ensuring `repo` input, using repository if not provided
-        repo=${{ inputs.repo }}
-        if [[ -z "$repo" ]]; then
-        repo=${{ github.event.repository.name }}
-        fi
-        echo "repo=${repo}" >> $GITHUB_OUTPUT
-
-    - name: Ensure token
-      id: ensure-token
-      shell: bash
-      run: |
-        # Ensuring `github_token` input, using `github.token` variable if not provided
-        github_token=${{ inputs.github_token }}
-        if [[ -z "$github_token" ]]; then
-          github_token=${{ github.token }}
-        fi
-        echo "github_token=${github_token}" >> $GITHUB_OUTPUT
-
     - name: Get ref
       id: get-ref
       uses: ovsds/get-ref-info-action@v1
       with:
-        github_token: ${{ steps.ensure-token.outputs.github_token }}
-        owner: ${{ steps.ensure-owner.outputs.owner }}
-        repo: ${{ steps.ensure-repo.outputs.repo }}
+        github_token: ${{ inputs.github_token }}
+        owner: ${{ inputs.owner }}
+        repo: ${{ inputs.repo }}
         ref: tags/${{ inputs.tag_name }}
 
     - name: Get commit
@@ -95,8 +65,8 @@ runs:
       shell: bash
       run: |
         # Getting commit information
-        owner=${{ steps.ensure-owner.outputs.owner }}
-        repo=${{ steps.ensure-repo.outputs.repo }}
+        owner=${{ inputs.owner }}
+        repo=${{ inputs.repo }}
         type=${{ steps.get-ref.outputs.type }}
         sha=${{ steps.get-ref.outputs.sha }}
 
@@ -121,7 +91,7 @@ runs:
         { echo "tag_message<<EOF"; echo "$tag_message"; echo "EOF"; } >> $GITHUB_OUTPUT # Multiline string
         echo "verified=${verified}" >> $GITHUB_OUTPUT
       env:
-        GH_TOKEN: ${{ steps.ensure-token.outputs.github_token }}
+        GH_TOKEN: ${{ inputs.github_token }}
 
 branding:
   icon: "tag"
