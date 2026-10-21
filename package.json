@@ -13,15 +13,20 @@
     "commit-msg": "commitlint"
   },
   "lint-staged": {
+    "*.sh": [
+      "shellcheck"
+    ],
     "*.{md,yaml,json,js}": [
       "prettier --check"
     ]
   },
   "scripts": {
-    "lint:check": "npm run lint:check:prettier",
+    "lint:check": "npm run lint:check:prettier && npm run lint:check:shellcheck",
     "lint:check:prettier": "prettier --check .",
-    "lint:fix": "npm run lint:fix:prettier",
+    "lint:check:shellcheck": "shellcheck **/*.sh --enable=all",
+    "lint:fix": "npm run lint:fix:prettier && npm run lint:fix:shellcheck",
     "lint:fix:prettier": "prettier --write .",
+    "lint:fix:shellcheck": "shellcheck **/*.sh --enable=all",
     "prepare": "husky"
   }
 }

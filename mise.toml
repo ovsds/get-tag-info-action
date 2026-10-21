@@ -7,6 +7,7 @@ python = "3.15.0"
 "pypi:cookiecutter" = "2.7.1"
 gh = "2.102.0"
 zizmor = "1.31.1"
+shellcheck = "0.11.0"
 
 [settings]
 task.quiet = true
@@ -91,6 +92,6 @@ run = [
     owner_github_login='ovsds' \
     with_zizmor='true' \
     with_gitleaks='false' \
-    with_shellcheck='false'
+    with_shellcheck='true'
   ''',
 ]
