@@ -1,5 +1,4 @@
 # shellcheck shell=bash
-# Functions of main.sh.
 
 function print_info() {
     local MESSAGE=$1
