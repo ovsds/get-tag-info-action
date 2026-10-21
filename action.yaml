@@ -72,7 +72,7 @@ runs:
         GH_TOKEN: ${{ inputs.github_token }}
       run: |
         # Get Tag Info
-        ${{ github.action_path }}/src/main.sh
+        "${GITHUB_ACTION_PATH}/src/main.sh"
 
 branding:
   icon: "tag"
