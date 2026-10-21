@@ -4,15 +4,19 @@ on:
   release:
     types: [published]
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 jobs:
   push-version-tags:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     permissions:
       contents: write
 
     steps:
       - name: Push Version Tags
-        uses: ovsds/push-version-tags-action@v1
+        uses: ovsds/push-version-tags-action@c16c3c8237d33f1db3b6c25465071843d920f9cd # v1.4.0
         with:
           version: ${{ github.event.release.tag_name }}

@@ -52,7 +52,7 @@ runs:
   steps:
     - name: Get ref
       id: get-ref
-      uses: ovsds/get-ref-info-action@v1
+      uses: ovsds/get-ref-info-action@fbc82e7980563dcbb87d8ee810e187ba8a4faedb # v1.3.0
       with:
         github_token: ${{ inputs.github_token }}
         owner: ${{ inputs.owner }}
