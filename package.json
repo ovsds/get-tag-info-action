@@ -2,22 +2,31 @@
   "private": true,
   "name": "get-tag-info-action",
   "devDependencies": {
-    "@commitlint/cli": "^19.0.3",
-    "@commitlint/config-conventional": "^19.0.3",
-    "husky": "^9.1.1",
-    "lint-staged": "^15.2.0",
-    "prettier": "^3.1.1"
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10"
   },
   "hooks": {
     "pre-commit": "lint-staged",
     "commit-msg": "commitlint"
   },
   "lint-staged": {
+    "*.sh": [
+      "shellcheck"
+    ],
     "*.{md,yaml,json,js}": [
       "prettier --check"
     ]
   },
   "scripts": {
+    "lint:check": "npm run lint:check:prettier && npm run lint:check:shellcheck",
+    "lint:check:prettier": "prettier --check .",
+    "lint:check:shellcheck": "shellcheck **/*.sh --enable=all",
+    "lint:fix": "npm run lint:fix:prettier && npm run lint:fix:shellcheck",
+    "lint:fix:prettier": "prettier --write .",
+    "lint:fix:shellcheck": "shellcheck **/*.sh --enable=all",
     "prepare": "husky"
   }
 }

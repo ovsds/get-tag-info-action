@@ -1,0 +1,2 @@
+# Follow sourced files, such as src/common.sh, also when shellcheck checks one file
+external-sources=true

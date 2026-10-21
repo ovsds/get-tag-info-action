@@ -42,12 +42,13 @@ Gets information for a tag.
 
 ### Global dependencies
 
-- nvm
-- node
+- [mise](https://mise.jdx.dev/installing-mise.html), activated in the shell (`eval "$(mise activate zsh)"`)
 
-### Taskfile commands
+All other tools are pinned in [mise.toml](mise.toml).
 
-For all commands see [Taskfile](Taskfile.yaml) or `task --list-all`.
+### mise tasks
+
+For all commands see [mise.toml](mise.toml) or `mise tasks ls`.
 
 ## License
 

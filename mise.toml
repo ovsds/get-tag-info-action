@@ -1,0 +1,97 @@
+min_version = "2026.10.3"
+
+[tools]
+node = "26.12.0"
+uv = "0.13.1"
+python = "3.15.0"
+"pypi:cookiecutter" = "2.7.1"
+gh = "2.102.0"
+zizmor = "1.31.1"
+shellcheck = "0.11.0"
+
+[settings]
+task.quiet = true
+
+[tasks.init]
+description = "Initialize project environment"
+run = [
+  "echo 'Installing mise tools...'",
+  "mise install",
+
+  "echo 'Installing node dependencies...'",
+  "npm install",
+
+  "echo 'Installing husky pre-commit...'",
+  "npm run prepare",
+]
+
+[tasks.lint]
+description = "Lint project"
+run = [
+  "echo 'Running linters...'",
+  "npm run lint:check",
+
+  "echo 'Running GHA checks...'",
+  'GH_TOKEN="$(gh auth token)" zizmor .',
+]
+
+[tasks.lint-fix]
+description = "Lint fix project"
+run = [
+  "echo 'Running linter fixes...'",
+  "npm run lint:fix",
+
+  "echo 'Running GHA checks...'",
+  'GH_TOKEN="$(gh auth token)" zizmor .',
+]
+
+[tasks.clean]
+description = "Clean project environment"
+run = [
+  "echo 'Cleaning node dependencies...'",
+  "rm -rf node_modules",
+]
+
+[tasks.dependencies-update]
+description = "Update dependencies"
+run = [
+  "echo 'Updating mise tools...'",
+  "mise upgrade --bump",
+
+  "echo 'Updating node dependencies...'",
+  "npm update",
+]
+
+[tasks.dependencies-check]
+description = "Check dependencies"
+run = [
+  "echo 'Checking mise tools...'",
+  "mise outdated",
+
+  "echo 'Checking node dependencies...'",
+  "npm outdated",
+  "npm audit",
+]
+
+[tasks.update-from-template]
+description = "Update project from template; TEMPLATE_PATH=<path> in the environment overrides the source"
+run = [
+  "echo 'Updating project from template...'",
+  '''
+  cookiecutter \
+    --no-input \
+    --overwrite-if-exists \
+    --output-dir ../ \
+    "${TEMPLATE_PATH:-https://github.com/ovsds/template-repository-github-action}" \
+    project_name='Get Tag Info Action' \
+    project_slug='get-tag-info-action' \
+    marketplace_name='Get Tag Info' \
+    action_type='composite' \
+    node_version='v26.12.0' \
+    owner_name='Dmitry Ovsiannikov' \
+    owner_github_login='ovsds' \
+    with_zizmor='true' \
+    with_gitleaks='false' \
+    with_shellcheck='true'
+  ''',
+]
