@@ -17,6 +17,6 @@ jobs:
 
     steps:
       - name: Push Version Tags
-        uses: ovsds/push-version-tags-action@c16c3c8237d33f1db3b6c25465071843d920f9cd # v1.4.0
+        uses: ovsds/push-version-tags-action@75ca005d4770f90fb04ade9db819e2773c5c0805 # v1.4.1
         with:
           version: ${{ github.event.release.tag_name }}

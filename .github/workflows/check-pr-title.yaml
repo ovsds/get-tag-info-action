@@ -29,6 +29,6 @@ jobs:
           sparse-checkout-cone-mode: false
 
       - name: Commitlint PR Title
-        uses: ovsds/commitlint-pr-title-action@a7fcd68b8f503b025ad4ee3ded6b26998cf8c369 # v1.2.0
+        uses: ovsds/commitlint-pr-title-action@1cc32c0ea07131d34b9f34616dabff219c4f4b15 # v1.2.1
         with:
           config_file: ./commitlint.config.js
